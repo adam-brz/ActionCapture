@@ -8,8 +8,10 @@ class GlobalKeyCapture
 {
 private:
     std::list<KeyInfo> keyQueue;
+    unsigned maxSize;
 
 public:
+    GlobalKeyCapture(unsigned queueSize = 16);
     virtual ~GlobalKeyCapture() = default;
 
     KeyInfo popKey();
@@ -19,7 +21,7 @@ public:
     const std::list<KeyInfo> &getQueue() const;
 
 protected:
-    virtual void storeKey(const KeyInfo &key) = 0;
+    virtual void storeKey(const KeyInfo &key);
 };
 
 #endif // GLOBALKEYCAPTURE_H

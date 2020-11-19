@@ -13,9 +13,6 @@ public:
     virtual void setPos(Point &pos) const = 0;
 
     virtual void move(int dx, int dy, int time) = 0;
-
-protected:
-    virtual void storeKey(const KeyInfo &key) = 0;
 };
 
 #endif // GLOBALMOUSE_H

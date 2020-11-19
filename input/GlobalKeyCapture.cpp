@@ -1,5 +1,11 @@
 #include "GlobalKeyCapture.h"
 
+GlobalKeyCapture::GlobalKeyCapture(unsigned queueSize) :
+    maxSize(queueSize)
+{
+
+}
+
 KeyInfo GlobalKeyCapture::popKey()
 {
     KeyInfo result;
@@ -25,4 +31,11 @@ void GlobalKeyCapture::clearQueue()
 const std::list<KeyInfo> &GlobalKeyCapture::getQueue() const
 {
     return keyQueue;
+}
+
+void GlobalKeyCapture::storeKey(const KeyInfo &key)
+{
+    keyQueue.push_back(key);
+    if(keyQueue.size() >= maxSize)
+        keyQueue.pop_front();
 }
