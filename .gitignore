@@ -30,3 +30,6 @@
 *.exe
 *.out
 *.app
+
+# QT5 project files
+*.user
