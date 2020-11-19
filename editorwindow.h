@@ -2,6 +2,7 @@
 #define EDITORWINDOW_H
 
 #include <QMainWindow>
+#include <QTimer>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class EditorWindow; }
@@ -11,11 +12,20 @@ class EditorWindow : public QMainWindow
 {
     Q_OBJECT
 
+private:
+    Ui::EditorWindow *ui;
+    QTimer *timer;
+
 public:
     EditorWindow(QWidget *parent = nullptr);
     ~EditorWindow();
 
-private:
-    Ui::EditorWindow *ui;
+protected:
+    void keyPressEvent(QKeyEvent *event) override;
+
+private slots:
+    void printMousePos();
+
+
 };
 #endif // EDITORWINDOW_H
