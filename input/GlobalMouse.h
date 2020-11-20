@@ -1,18 +1,29 @@
 #ifndef GLOBALMOUSE_H
 #define GLOBALMOUSE_H
 
-#include "GlobalKeyCapture.h"
+#include "KeyQueue.h"
 #include "Point.h"
 
-class GlobalMouse : public GlobalKeyCapture
+#include "input/InputDevice.h"
+
+class GlobalMouse : public InputDevice
 {
+private:
+    KeyQueue queue;
+
 public:
-    ~GlobalMouse() = default;
+    static GlobalMouse *instance();
+    static void removeInstance();
+
+    virtual ~GlobalMouse() = default;
 
     virtual Point getPos() const = 0;
     virtual void setPos(Point &pos) const = 0;
 
     virtual void move(int dx, int dy, int time) = 0;
+
+protected:
+    GlobalMouse() = default;
 };
 
 #endif // GLOBALMOUSE_H
