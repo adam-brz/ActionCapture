@@ -6,14 +6,24 @@
 
 class GlobalWinMouse : public GlobalMouse
 {
+private:
+    static GlobalWinMouse *uniqueInstance;
+    HHOOK hook;
+
 public:
-    GlobalWinMouse();
-    ~GlobalWinMouse();
+    static GlobalWinMouse *instance();
+    static void removeInstance();
+
+
+    virtual ~GlobalWinMouse();
 
     Point getPos() const override;
     void setPos(Point &pos) const override;
 
     void move(int dx, int dy, int time) override;
+
+protected:
+    GlobalWinMouse();
 };
 
 #endif // GLOBALWINMOUSE_H

@@ -1,17 +1,23 @@
 #ifndef GLOBALWINKEYBOARD_H
 #define GLOBALWINKEYBOARD_H
 
-#include "../GlobalKeyCapture.h"
+#include "input/GlobalKeyboard.h"
 #include <windows.h>
 
-class GlobalWinKeyboard : public GlobalKeyCapture
+class GlobalWinKeyboard : public GlobalKeyboard
 {
 private:
+    static GlobalWinKeyboard *uniqueInstance;
     HHOOK hook;
 
 public:
-    GlobalWinKeyboard();
+    static GlobalWinKeyboard *instance();
+    static void removeInstance();
+
     ~GlobalWinKeyboard();
+
+protected:
+    GlobalWinKeyboard();
 };
 
 #endif // GLOBALWINKEYBOARD_H

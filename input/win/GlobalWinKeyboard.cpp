@@ -1,56 +1,44 @@
 #include "GlobalWinKeyboard.h"
-
 #include <stdio.h>
 
-LRESULT CALLBACK KeyboardHook(int nCode, WPARAM wParam, LPARAM lParam) {
-    static int last;
-    BOOL letter = 1;
+GlobalWinKeyboard *GlobalWinKeyboard::uniqueInstance = nullptr;
 
+void processKeyboardAction(WPARAM wParam, LPARAM lParam)
+{
+    KeyInfo info;
+    PKBDLLHOOKSTRUCT action = (PKBDLLHOOKSTRUCT)lParam;
+
+    if(wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN)
+        info.status = KeyStatus::DOWN;
+    else
+        info.status = KeyStatus::UP;
+
+    info.time = action->time;
+    info.code = action->vkCode;
+
+    GlobalWinKeyboard::instance()->invokeCallback(info);
+}
+
+LRESULT CALLBACK KeyboardHook(int nCode, WPARAM wParam, LPARAM lParam)
+{
     if(nCode == HC_ACTION) {
-        if(wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN) {
-            PKBDLLHOOKSTRUCT p = (PKBDLLHOOKSTRUCT)lParam;
-            int code = p->vkCode;
-            if(code == 0xA2) { // LCTRL or first signal of RALT
-                last = code;
-                return CallNextHookEx(NULL, nCode, wParam, lParam);
-            }
-            if(last == 0xA2 && code == 0xA5) { // RALT
-                printf("%s", "<RALT>");
-                letter = 0;
-            } else if(last == 0xA2 && code != 0xA5) {
-                printf("%s", "<LCTRL>");
-            }
-            if(code == 0xA3) {
-                letter = 0;
-                printf("%s", "<RCTRL>");
-            }
-            if(code == 0xA4) {
-                letter = 0;
-                printf("%s", "<LALT>");
-            }
-            if(code == 0xA0) {
-                letter = 0;
-                printf("%s", "<LSHIFT>");
-            }
-            if(code == 0xA1) {
-                letter = 0;
-                printf("%s", "<RSHIFT>");
-            }
-            if(code == 0x08) {
-                letter = 0;
-                printf("%s", "<ESC>");
-            }
-            if(code == 0x0D) {
-                letter = 0;
-                printf("\n");
-            }
-            last = code;
-            if(letter) {
-                printf("%c, %d", code, code);
-            }
-        }
+        processKeyboardAction(wParam, lParam);
     }
+
     return CallNextHookEx(NULL, nCode, wParam, lParam);
+}
+
+GlobalWinKeyboard *GlobalWinKeyboard::instance()
+{
+    if(uniqueInstance == nullptr)
+        uniqueInstance = new GlobalWinKeyboard;
+    return uniqueInstance;
+}
+
+void GlobalWinKeyboard::removeInstance()
+{
+    delete uniqueInstance;
+    uniqueInstance = nullptr;
 }
 
 GlobalWinKeyboard::GlobalWinKeyboard()
