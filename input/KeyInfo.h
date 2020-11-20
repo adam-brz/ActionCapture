@@ -3,10 +3,16 @@
 
 #include "Key.h"
 
+enum class KeyStatus
+{
+    UP = 0,
+    DOWN
+};
+
 struct KeyInfo
 {
     Key code = 0;
-    int status = 0; // Pressed/released
+    KeyStatus status = KeyStatus::UP;
     int time = 0;
 };
 
