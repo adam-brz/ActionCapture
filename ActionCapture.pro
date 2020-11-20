@@ -9,18 +9,24 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    input/GlobalKeyCapture.cpp \
+    input/GlobalKeyboard.cpp \
     input/GlobalMouse.cpp \
+    input/InputDevice.cpp \
+    input/win/GlobalWinKeyboard.cpp \
+    input/win/GlobalWinMouse.cpp \
     main.cpp \
     editorwindow.cpp
 
 HEADERS += \
     editorwindow.h \
-    input/GlobalKeyCapture.h \
+    input/GlobalKeyboard.h \
     input/GlobalMouse.h \
+    input/InputDevice.h \
     input/Key.h \
     input/KeyInfo.h \
-    input/Point.h
+    input/Point.h \
+    input/win/GlobalWinKeyboard.h \
+    input/win/GlobalWinMouse.h
 
 FORMS += \
     editorwindow.ui
