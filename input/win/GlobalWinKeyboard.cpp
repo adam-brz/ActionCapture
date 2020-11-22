@@ -1,22 +1,20 @@
 #include "GlobalWinKeyboard.h"
-#include <stdio.h>
+#include "input/KeyboardEvent.h"
 
 GlobalWinKeyboard *GlobalWinKeyboard::uniqueInstance = nullptr;
 
 void processKeyboardAction(WPARAM wParam, LPARAM lParam)
 {
-    KeyInfo info;
+    KeyboardEvent event;
     PKBDLLHOOKSTRUCT action = (PKBDLLHOOKSTRUCT)lParam;
 
     if(wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN)
-        info.status = KeyStatus::DOWN;
+        event.status = KeyStatus::DOWN;
     else
-        info.status = KeyStatus::UP;
+        event.status = KeyStatus::UP;
 
-    info.time = action->time;
-    info.code = action->vkCode;
-
-    GlobalWinKeyboard::instance()->invokeCallback(info);
+    event.code = action->vkCode;
+    GlobalWinKeyboard::instance()->invokeCallback(event);
 }
 
 LRESULT CALLBACK KeyboardHook(int nCode, WPARAM wParam, LPARAM lParam)
