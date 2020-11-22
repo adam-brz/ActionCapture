@@ -2,17 +2,22 @@
 #define GLOBALMOUSE_H
 
 #include "Point.h"
-#include "input/InputDevice.h"
+#include "MouseEvent.h"
 
-class GlobalMouse : public InputDevice
+#include <functional>
+
+class GlobalMouse
 {
+    std::function<void(const MouseEvent&)> callback;
+
 public:
     virtual ~GlobalMouse() = default;
 
-    virtual Point getPos() const = 0;
-    virtual void setPos(Point &pos) const = 0;
+    virtual Point getPos() const;
+    virtual void setPos(Point &pos) const;
 
-    virtual void move(int dx, int dy, int time) = 0;
+    void setCallback(std::function<void(const MouseEvent&)> newCallback);
+    void invokeCallback(const MouseEvent& event);
 };
 
 #endif // GLOBALMOUSE_H

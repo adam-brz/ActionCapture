@@ -1,7 +1,7 @@
 #ifndef KEYBOARDEVENT_H
 #define KEYBOARDEVENT_H
 
-typedef int Key;
+#include "Key.h"
 
 enum class KeyStatus
 {
@@ -13,7 +13,6 @@ struct KeyboardEvent
 {
     Key code = 0;
     KeyStatus status = KeyStatus::UP;
-    int time = 0;
 };
 
 #endif // KEYBOARDEVENT_H
