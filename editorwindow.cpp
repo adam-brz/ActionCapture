@@ -14,14 +14,12 @@ EditorWindow::EditorWindow(QWidget *parent)
       ui(new Ui::EditorWindow)
 {
     ui->setupUi(this);
-    timer = new QTimer(this);
-    timer->start(200);
 
     mouse = DeviceFactory::makeMouse();
-    mouse->setCallback([&](const KeyInfo &info){printMousePos(info);});
+    mouse->setCallback([&](const MouseEvent &event){mouseEvent(event);});
 
     keyboard = DeviceFactory::makeKeyboard();
-    keyboard->setCallback([&](const KeyInfo &info){printKey(info.code, (int)info.status, info.time);});
+    keyboard->setCallback([&](const KeyboardEvent &event){kbEvent(event);});
 }
 
 EditorWindow::~EditorWindow()
@@ -30,17 +28,14 @@ EditorWindow::~EditorWindow()
     delete ui;
 }
 
-void EditorWindow::printMousePos(const KeyInfo &info)
+void EditorWindow::kbEvent(const KeyboardEvent &event)
 {
-    /*QScreen *screen = QApplication::primaryScreen();
-    QCursor *cursor = new QCursor;*/
-    //qDebug() << cursor->pos(screen);
-
-    qDebug() << info.code  << " : " << (int)info.status << " : " << info.time;
+    qDebug() << "Key: " << event.code << ": " << (int)(event.status);
 }
 
-void EditorWindow::printKey(int key, int status, int time)
+void EditorWindow::mouseEvent(const MouseEvent &event)
 {
-    qDebug() <<  key  << " : " << status << " : " << time;
+    qDebug() << "Mouse: " << QPoint(event.point.x, event.point.y)
+                << ": " << (int)(event.key)
+                << ": " << (int)(event.type);
 }
-

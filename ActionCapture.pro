@@ -10,7 +10,8 @@ CONFIG += c++11
 
 SOURCES += \
     input/DeviceFactory.cpp \
-    input/InputDevice.cpp \
+    input/GlobalKeyboard.cpp \
+    input/GlobalMouse.cpp \
     input/win/GlobalWinKeyboard.cpp \
     input/win/GlobalWinMouse.cpp \
     main.cpp \
@@ -21,9 +22,9 @@ HEADERS += \
     input/DeviceFactory.h \
     input/GlobalKeyboard.h \
     input/GlobalMouse.h \
-    input/InputDevice.h \
     input/Key.h \
-    input/KeyInfo.h \
+    input/KeyboardEvent.h \
+    input/MouseEvent.h \
     input/Point.h \
     input/win/GlobalWinKeyboard.h \
     input/win/GlobalWinMouse.h
