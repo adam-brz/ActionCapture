@@ -26,14 +26,9 @@ public:
     EditorWindow(QWidget *parent = nullptr);
     ~EditorWindow();
 
-protected:
-    void keyPressEvent(QKeyEvent *event) override;
-
-private slots:
-    void printMousePos();
-
 private:
     void printKey(int key, int status, int time);
+    void printMousePos(const KeyInfo &info);
 
 };
 #endif // EDITORWINDOW_H

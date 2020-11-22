@@ -9,8 +9,7 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    input/GlobalKeyboard.cpp \
-    input/GlobalMouse.cpp \
+    input/DeviceFactory.cpp \
     input/InputDevice.cpp \
     input/win/GlobalWinKeyboard.cpp \
     input/win/GlobalWinMouse.cpp \
@@ -19,6 +18,7 @@ SOURCES += \
 
 HEADERS += \
     editorwindow.h \
+    input/DeviceFactory.h \
     input/GlobalKeyboard.h \
     input/GlobalMouse.h \
     input/InputDevice.h \

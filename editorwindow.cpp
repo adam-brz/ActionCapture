@@ -1,7 +1,7 @@
 #include "editorwindow.h"
 #include "ui_editorwindow.h"
 
-#include "input/win/GlobalWinMouse.h"
+#include "input/DeviceFactory.h"
 
 #include <QKeyEvent>
 #include <QEvent>
@@ -17,31 +17,26 @@ EditorWindow::EditorWindow(QWidget *parent)
     timer = new QTimer(this);
     timer->start(200);
 
-    mouse = GlobalMouse::instance();
-    keyboard = GlobalKeyboard::instance();
-    keyboard->setCallback([&](const KeyInfo &info){printKey(info.code, (int)info.status, info.time);});
+    mouse = DeviceFactory::makeMouse();
+    mouse->setCallback([&](const KeyInfo &info){printMousePos(info);});
 
-    connect(timer, &QTimer::timeout, this, &EditorWindow::printMousePos);
+    keyboard = DeviceFactory::makeKeyboard();
+    keyboard->setCallback([&](const KeyInfo &info){printKey(info.code, (int)info.status, info.time);});
 }
 
 EditorWindow::~EditorWindow()
 {
-    keyboard->removeInstance();
-    mouse->removeInstance();
+    DeviceFactory::removeInstances();
     delete ui;
 }
 
-void EditorWindow::keyPressEvent(QKeyEvent *event)
+void EditorWindow::printMousePos(const KeyInfo &info)
 {
-   // qDebug() << event->timestamp() << " : " << Qt::Key(event->key()) << " : " << int(event->key());
-}
-
-void EditorWindow::printMousePos()
-{
-    QScreen *screen = QApplication::primaryScreen();
-    QCursor *cursor = new QCursor;
-
+    /*QScreen *screen = QApplication::primaryScreen();
+    QCursor *cursor = new QCursor;*/
     //qDebug() << cursor->pos(screen);
+
+    qDebug() << info.code  << " : " << (int)info.status << " : " << info.time;
 }
 
 void EditorWindow::printKey(int key, int status, int time)
