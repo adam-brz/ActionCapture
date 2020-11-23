@@ -13,6 +13,8 @@ public:
 
     void setCallback(std::function<void(const KeyboardEvent&)> newCallback);
     void invokeCallback(const KeyboardEvent& event);
+
+    virtual void sendInput(const KeyboardEvent& event) = 0;
 };
 
 #endif // GLOBALKEYBOARD_H

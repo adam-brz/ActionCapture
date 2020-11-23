@@ -48,3 +48,15 @@ GlobalWinKeyboard::~GlobalWinKeyboard()
 {
     UnhookWindowsHookEx(hook);
 }
+
+void GlobalWinKeyboard::sendInput(const KeyboardEvent& event)
+{
+    ZeroMemory(&input, sizeof(INPUT));
+    input.type = INPUT_KEYBOARD;
+    input.ki.wVk = event.code;
+
+    if(event.status == KeyStatus::UP)
+        input.ki.dwFlags = KEYEVENTF_KEYUP;
+
+    SendInput(1, &input, sizeof(INPUT));
+}

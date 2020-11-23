@@ -8,9 +8,7 @@ class GlobalWinMouse : public GlobalMouse
 {
 private:
     static GlobalWinMouse *uniqueInstance;
-
     HHOOK hook;
-    INPUT inputBuffer;
 
 public:
     static GlobalWinMouse *instance();
