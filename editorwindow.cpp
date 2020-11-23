@@ -20,6 +20,13 @@ EditorWindow::EditorWindow(QWidget *parent)
 
     keyboard = DeviceFactory::makeKeyboard();
     keyboard->setCallback([&](const KeyboardEvent &event){kbEvent(event);});
+
+    /*QTimer::singleShot(2000, [&](){
+        MouseEvent ev;
+        ev.type = MouseEventType::MOVE;
+        ev.point = Point{100, 100};
+        mouse->sendInput(ev);
+    });*/
 }
 
 EditorWindow::~EditorWindow()

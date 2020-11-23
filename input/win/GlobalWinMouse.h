@@ -9,11 +9,13 @@ class GlobalWinMouse : public GlobalMouse
 private:
     static GlobalWinMouse *uniqueInstance;
     HHOOK hook;
+    INPUT input;
 
 public:
     static GlobalWinMouse *instance();
     static void removeInstance();
 
+    virtual void sendInput(const MouseEvent& event) override;
     virtual ~GlobalWinMouse();
 
 protected:
