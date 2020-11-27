@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QElapsedTimer>
+#include <QTimer>
 
 #include <QList>
 #include <QPair>
@@ -25,6 +26,7 @@ class EditorWindow : public QMainWindow
 private:
     Ui::EditorWindow *ui;
     QElapsedTimer timer;
+    QTimer actionInvoker;
 
     GlobalMouse *mouse;
     GlobalKeyboard *keyboard;
@@ -38,9 +40,18 @@ public:
 
     void addAction(Action* action, unsigned startTime, int index = -1);
 
+private slots:
+    void btnNextPressed();
+    void btnPrevPressed();
+    void btnFirstPressed();
+    void btnLastPressed();
+    void btnPlayPressed(bool shouldPlay);
+    void btnRecordPressed(bool shouldRecord);
+
+    void invokeActions();
+
 private:
     void kbEvent(const KeyboardEvent &event);
     void mouseEvent(const MouseEvent &event);
-
 };
 #endif // EDITORWINDOW_H

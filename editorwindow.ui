@@ -24,21 +24,21 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QPushButton" name="pushButton">
+       <widget class="QPushButton" name="gotoFirstButton">
         <property name="text">
          <string>&lt;&lt;</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_2">
+       <widget class="QPushButton" name="gotoPrevButton">
         <property name="text">
          <string>&lt;</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_3">
+       <widget class="QPushButton" name="playButton">
         <property name="text">
          <string>--&gt;</string>
         </property>
@@ -48,14 +48,14 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_4">
+       <widget class="QPushButton" name="gotoNextButton">
         <property name="text">
          <string>&gt;</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_5">
+       <widget class="QPushButton" name="gotoEndButton">
         <property name="text">
          <string>&gt;&gt;</string>
         </property>
@@ -108,6 +108,9 @@
       </property>
       <attribute name="horizontalHeaderCascadingSectionResizes">
        <bool>false</bool>
+      </attribute>
+      <attribute name="horizontalHeaderHighlightSections">
+       <bool>true</bool>
       </attribute>
       <column/>
       <column/>
