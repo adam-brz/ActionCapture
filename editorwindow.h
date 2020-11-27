@@ -2,11 +2,15 @@
 #define EDITORWINDOW_H
 
 #include <QMainWindow>
-#include <QTimer>
+#include <QElapsedTimer>
+
+#include <QList>
+#include <QPair>
 
 #include <input/GlobalMouse.h>
 #include <input/GlobalKeyboard.h>
 
+#include "input/Action.h"
 #include "input/KeyboardEvent.h"
 #include "input/MouseEvent.h"
 
@@ -20,13 +24,19 @@ class EditorWindow : public QMainWindow
 
 private:
     Ui::EditorWindow *ui;
+    QElapsedTimer timer;
 
     GlobalMouse *mouse;
     GlobalKeyboard *keyboard;
 
+    QList<QPair<Action*, unsigned>> actions;
+    bool isRecording = false;
+
 public:
     EditorWindow(QWidget *parent = nullptr);
     ~EditorWindow();
+
+    void addAction(Action* action, unsigned startTime, int index = -1);
 
 private:
     void kbEvent(const KeyboardEvent &event);

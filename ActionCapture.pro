@@ -12,6 +12,7 @@ SOURCES += \
     input/DeviceFactory.cpp \
     input/GlobalKeyboard.cpp \
     input/GlobalMouse.cpp \
+    input/KeyboardAction.cpp \
     input/win/GlobalWinKeyboard.cpp \
     input/win/GlobalWinMouse.cpp \
     main.cpp \
@@ -19,10 +20,12 @@ SOURCES += \
 
 HEADERS += \
     editorwindow.h \
+    input/Action.h \
     input/DeviceFactory.h \
     input/GlobalKeyboard.h \
     input/GlobalMouse.h \
     input/Key.h \
+    input/KeyboardAction.h \
     input/KeyboardEvent.h \
     input/MouseEvent.h \
     input/Point.h \
