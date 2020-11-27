@@ -1,14 +1,9 @@
 #include "editorwindow.h"
 #include "ui_editorwindow.h"
 
+#include <QMessageBox>
+
 #include "input/DeviceFactory.h"
-
-#include <QKeyEvent>
-#include <QEvent>
-#include <QScreen>
-#include <QCursor>
-#include <QtDebug>
-
 #include "input/KeyboardAction.h"
 #include "input/KeyboardEvent.h"
 
@@ -32,10 +27,12 @@ EditorWindow::EditorWindow(QWidget *parent)
     connect(ui->gotoNextButton, &QPushButton::clicked, this, &EditorWindow::btnNextPressed);
     connect(ui->gotoEndButton, &QPushButton::clicked, this, &EditorWindow::btnLastPressed);
 
-    actionInvoker.setSingleShot(true);
-    connect(&actionInvoker, &QTimer::timeout, this, &EditorWindow::invokeActions);
+    connect(ui->actionExit, &QAction::triggered, this, &EditorWindow::close);
+    connect(ui->action_About, &QAction::triggered, this, &EditorWindow::showAbout);
 
     timer.start();
+    actionInvoker.setSingleShot(true);
+    connect(&actionInvoker, &QTimer::timeout, this, &EditorWindow::invokeActions);
 
     mouse = DeviceFactory::makeMouse();
     mouse->setCallback([&](const MouseEvent &event) {
@@ -71,6 +68,31 @@ void EditorWindow::addAction(Action *action, unsigned startTime, int index)
 
     QTableWidgetItem *time = new QTableWidgetItem(QString("%1").arg(startTime));
     ui->tableWidget->setItem(index, 1, time);
+}
+
+void EditorWindow::showAbout() const
+{
+    QMessageBox *about = new QMessageBox(QMessageBox::Information,
+                                         tr("About"),
+                                         tr("ActionCapture is Qt5 graphical application for "
+                                            "recording and recreating user interactions "
+                                            "such as mouse move/click and keyboard input.\n"
+                                            "Project: https://github.com/Andrew2a1/ActionCapture"),
+                                         QMessageBox::Ok,
+                                         this->centralWidget());
+    about->exec();
+}
+
+void EditorWindow::updatePlayStatus()
+{
+    const int current = ui->tableWidget->currentRow();
+    const int total = ui->tableWidget->rowCount();
+    const QString status = QString("Processing: %1/%2").arg(current+1).arg(total);
+
+    if(current == -1)
+        ui->statusbar->clearMessage();
+    else
+        ui->statusbar->showMessage(status);
 }
 
 void EditorWindow::btnRecordPressed(bool shouldRecord)
@@ -118,6 +140,7 @@ void EditorWindow::btnPlayPressed(bool shouldPlay)
             current = 0;
         }
 
+        updatePlayStatus();
         actionInvoker.start(actions[current].second);
     }
     else if(!shouldPlay)
@@ -129,8 +152,9 @@ void EditorWindow::btnPlayPressed(bool shouldPlay)
 void EditorWindow::invokeActions()
 {
     int current = ui->tableWidget->currentRow();
-
     actions[current].first->run();
+    updatePlayStatus();
+
     if(current < ui->tableWidget->rowCount() - 1)
     {
         actionInvoker.start(actions[current + 1].second);
@@ -138,6 +162,7 @@ void EditorWindow::invokeActions()
     }
     else
     {
+        ui->statusbar->clearMessage();
         ui->playButton->setChecked(false);
     }
 }

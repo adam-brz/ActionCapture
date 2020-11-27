@@ -41,6 +41,9 @@ public:
     void addAction(Action* action, unsigned startTime, int index = -1);
 
 private slots:
+    void showAbout() const;
+    void updatePlayStatus();
+
     void btnNextPressed();
     void btnPrevPressed();
     void btnFirstPressed();
