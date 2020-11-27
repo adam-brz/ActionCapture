@@ -133,8 +133,8 @@ void EditorWindow::invokeActions()
     actions[current].first->run();
     if(current < ui->tableWidget->rowCount() - 1)
     {
+        actionInvoker.start(actions[current + 1].second);
         btnNextPressed();
-        actionInvoker.start(actions[current].second);
     }
     else
     {
