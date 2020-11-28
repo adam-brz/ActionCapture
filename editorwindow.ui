@@ -90,31 +90,7 @@
      </layout>
     </item>
     <item>
-     <widget class="QTableWidget" name="tableWidget">
-      <property name="editTriggers">
-       <set>QAbstractItemView::NoEditTriggers</set>
-      </property>
-      <property name="selectionMode">
-       <enum>QAbstractItemView::SingleSelection</enum>
-      </property>
-      <property name="selectionBehavior">
-       <enum>QAbstractItemView::SelectRows</enum>
-      </property>
-      <property name="rowCount">
-       <number>0</number>
-      </property>
-      <property name="columnCount">
-       <number>2</number>
-      </property>
-      <attribute name="horizontalHeaderCascadingSectionResizes">
-       <bool>false</bool>
-      </attribute>
-      <attribute name="horizontalHeaderHighlightSections">
-       <bool>true</bool>
-      </attribute>
-      <column/>
-      <column/>
-     </widget>
+     <widget class="ActionTable" name="actionTable" native="true"/>
     </item>
    </layout>
   </widget>
@@ -198,6 +174,14 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>ActionTable</class>
+   <extends>QWidget</extends>
+   <header>gui/ActionTable.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
