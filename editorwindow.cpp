@@ -36,16 +36,10 @@ EditorWindow::EditorWindow(QWidget *parent)
     connect(ui->actionTable, &ActionTable::runUpdated, this, &EditorWindow::updatePlayStatus);
 
     mouse = DeviceFactory::makeMouse();
-    mouse->setCallback([&](const MouseEvent &event) {
-        if(isRecording)
-            mouseEvent(event);
-    });
+    mouse->setCallback([&](const MouseEvent &event) {mouseEvent(event);});
 
     keyboard = DeviceFactory::makeKeyboard();
-    keyboard->setCallback([&](const KeyboardEvent &event) {
-        if(isRecording)
-            kbEvent(event);
-    });
+    keyboard->setCallback([&](const KeyboardEvent &event) {kbEvent(event);});
 
     ui->actionTable->setMouse(mouse);
     ui->actionTable->setKeyboard(keyboard);
@@ -92,25 +86,11 @@ void EditorWindow::updatePlayStatus(int current)
 void EditorWindow::btnRecordPressed(bool shouldRecord)
 {
     if(shouldRecord) {
-        ui->actionTable->stopRunning();
-        ui->playButton->setChecked(false);
-        btnPlayPressed(false);
+        stopPlaying();
     }
 
     isRecording = shouldRecord;
     timer.restart();
-}
-
-void EditorWindow::newFile()
-{
-    ui->actionTable->stopRunning();
-    ui->playButton->setChecked(false);
-    ui->recordButton->setChecked(false);
-
-    btnPlayPressed(false);
-    btnRecordPressed(false);
-
-    ui->actionTable->clearActions();
 }
 
 void EditorWindow::btnNextPressed()
@@ -141,8 +121,7 @@ void EditorWindow::btnPlayPressed(bool shouldPlay)
         ui->playButton->setChecked(false);
     }
     else if(shouldPlay) {
-        ui->recordButton->setChecked(false);
-        btnRecordPressed(false);
+        stopRecording();
         ui->actionTable->runActions();
     }
     else if(!shouldPlay) {
@@ -150,17 +129,12 @@ void EditorWindow::btnPlayPressed(bool shouldPlay)
     }
 }
 
-void EditorWindow::kbEvent(const KeyboardEvent &event)
+void EditorWindow::newFile()
 {
-    KeyboardAction *action = new KeyboardAction(keyboard, event);
-    action->setStartTime(timer.elapsed());
-    addAction(action, ui->actionTable->current());
-    timer.restart();
-}
+    stopPlaying();
+    stopRecording();
 
-void EditorWindow::mouseEvent(const MouseEvent &event)
-{
-
+    ui->actionTable->clearActions();
 }
 
 void EditorWindow::askSaveToFile()
@@ -182,6 +156,7 @@ void EditorWindow::askOpenFile()
         openFile(name);
     }
 }
+
 
 bool EditorWindow::openFile(const QString &filename)
 {
@@ -220,4 +195,34 @@ bool EditorWindow::saveToFile(const QString &filename)
 
     delete savable;
     return true;
+}
+
+void EditorWindow::stopPlaying()
+{
+    ui->actionTable->stopRunning();
+    ui->playButton->setChecked(false);
+    btnPlayPressed(false);
+}
+
+void EditorWindow::stopRecording()
+{
+    ui->recordButton->setChecked(false);
+    btnRecordPressed(false);
+}
+
+void EditorWindow::kbEvent(const KeyboardEvent &event)
+{
+    if(!isRecording)
+        return;
+
+    KeyboardAction *action = new KeyboardAction(keyboard, event);
+    action->setStartTime(timer.elapsed());
+    addAction(action, ui->actionTable->current());
+    timer.restart();
+}
+
+void EditorWindow::mouseEvent(const MouseEvent &event)
+{
+    if(!isRecording)
+        return;
 }

@@ -3,8 +3,6 @@
 
 #include <QMainWindow>
 #include <QElapsedTimer>
-#include <QTimer>
-
 #include <QList>
 
 #include "input/GlobalMouse.h"
@@ -52,10 +50,13 @@ private slots:
     void askOpenFile();
 
 private:
-    void kbEvent(const KeyboardEvent &event);
-    void mouseEvent(const MouseEvent &event);
-
     bool openFile(const QString &filename);
     bool saveToFile(const QString &filename);
+
+    void stopPlaying();
+    void stopRecording();
+
+    void kbEvent(const KeyboardEvent &event);
+    void mouseEvent(const MouseEvent &event);
 };
 #endif // EDITORWINDOW_H
