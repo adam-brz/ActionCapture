@@ -18,7 +18,9 @@ SOURCES += \
     input/win/GlobalWinKeyboard.cpp \
     input/win/GlobalWinMouse.cpp \
     main.cpp \
-    editorwindow.cpp
+    editorwindow.cpp \
+    toolbox/Savable.cpp \
+    toolbox/SavableData.cpp
 
 HEADERS += \
     editorwindow.h \
@@ -33,7 +35,9 @@ HEADERS += \
     input/MouseEvent.h \
     input/Point.h \
     input/win/GlobalWinKeyboard.h \
-    input/win/GlobalWinMouse.h
+    input/win/GlobalWinMouse.h \
+    toolbox/Savable.h \
+    toolbox/SavableData.h
 
 FORMS += \
     editorwindow.ui
