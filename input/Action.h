@@ -2,8 +2,9 @@
 #define ACTION_H
 
 #include <string>
+#include "toolbox/Savable.h"
 
-class Action
+class Action : public Savable
 {
     unsigned startTime = 0;
 
@@ -14,6 +15,9 @@ public:
 
     unsigned getStartTime() const;
     void setStartTime(unsigned value);
+
+    virtual SavableData *save() const override;
+    virtual bool restore(SavableData *data) override;
 };
 
 #endif // ACTION_H

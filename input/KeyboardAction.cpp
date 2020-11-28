@@ -1,4 +1,11 @@
 #include "KeyboardAction.h"
+#include "toolbox/SavableData.h"
+
+KeyboardAction::KeyboardAction(GlobalKeyboard *keyboard) :
+    keyboard(keyboard)
+{
+
+}
 
 KeyboardAction::KeyboardAction(GlobalKeyboard *keyboard, const KeyboardEvent &event) :
     keyboard(keyboard),
@@ -20,5 +27,27 @@ std::string KeyboardAction::name() const
 void KeyboardAction::run()
 {
     keyboard->sendInput(event);
+}
+
+unsigned char KeyboardAction::typeID() const
+{
+    return 1;
+}
+
+SavableData *KeyboardAction::save() const
+{
+    SavableData *data = Action::save();
+    data->add(RawBytesConst(&event), sizeof(event));
+
+    return data;
+}
+
+bool KeyboardAction::restore(SavableData *data)
+{
+    if(!Action::restore(data))
+        return false;
+
+    data->read(RawBytes(&event), sizeof(event));
+    return true;
 }
 
