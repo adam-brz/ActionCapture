@@ -49,8 +49,14 @@ private slots:
     void btnPlayPressed(bool shouldPlay);
     void btnRecordPressed(bool shouldRecord);
 
+    void askSaveToFile();
+    void askOpenFile();
+
 private:
     void kbEvent(const KeyboardEvent &event);
     void mouseEvent(const MouseEvent &event);
+
+    bool openFile(const QString &filename);
+    bool saveToFile(const QString &filename);
 };
 #endif // EDITORWINDOW_H

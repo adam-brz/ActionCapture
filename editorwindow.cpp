@@ -2,11 +2,13 @@
 #include "ui_editorwindow.h"
 
 #include <QMessageBox>
+#include <QFileDialog>
 #include <QtDebug>
 
 #include "input/DeviceFactory.h"
 #include "input/KeyboardAction.h"
 #include "input/KeyboardEvent.h"
+#include "toolbox/SavableData.h"
 
 EditorWindow::EditorWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -21,6 +23,10 @@ EditorWindow::EditorWindow(QWidget *parent)
     connect(ui->gotoPrevButton, &QPushButton::clicked, this, &EditorWindow::btnPrevPressed);
     connect(ui->gotoNextButton, &QPushButton::clicked, this, &EditorWindow::btnNextPressed);
     connect(ui->gotoEndButton, &QPushButton::clicked, this, &EditorWindow::btnLastPressed);
+
+    connect(ui->action_Open, &QAction::triggered, this, &EditorWindow::askOpenFile);
+    connect(ui->action_Save, &QAction::triggered, this, &EditorWindow::askSaveToFile);
+    connect(ui->actionExit, &QAction::triggered, this, &EditorWindow::close);
 
     connect(ui->actionExit, &QAction::triggered, this, &EditorWindow::close);
     connect(ui->action_About, &QAction::triggered, this, &EditorWindow::showAbout);
@@ -142,4 +148,63 @@ void EditorWindow::kbEvent(const KeyboardEvent &event)
 void EditorWindow::mouseEvent(const MouseEvent &event)
 {
 
+}
+
+void EditorWindow::askSaveToFile()
+{
+    QString name = QFileDialog::getSaveFileName(this, tr("Open saved actions"),
+                                        ".", tr("Action Capture (*.actc)"));
+
+    if(!name.isEmpty()) {
+        saveToFile(name);
+    }
+}
+
+void EditorWindow::askOpenFile()
+{
+    QString name = QFileDialog::getOpenFileName(this, tr("Open saved actions"),
+                                                ".", tr("Action Capture (*.actc)"));
+
+    if(!name.isEmpty()) {
+        openFile(name);
+    }
+}
+
+bool EditorWindow::openFile(const QString &filename)
+{
+    QFile saveFile(filename);
+    SavableData savable;
+
+    saveFile.open(QIODevice::ReadOnly);
+
+    if(!(saveFile.read(4) == QString("ACTC").toLocal8Bit()))
+        return false;
+
+    QByteArray data = saveFile.readAll();
+
+    savable.reserve(data.size());
+    savable.add(RawBytesConst(data.data()), data.size());
+
+    ui->actionTable->restore(&savable);
+
+    saveFile.close();
+    return true;
+}
+
+bool EditorWindow::saveToFile(const QString &filename)
+{
+    SavableData *savable = ui->actionTable->save();
+
+    QFile saveFile(filename);
+    saveFile.open(QIODevice::WriteOnly);
+
+    if(!saveFile.isWritable())
+        return false;
+
+    saveFile.write("ACTC", 4);
+    saveFile.write((const char*)(savable->getRaw()), savable->size());
+    saveFile.close();
+
+    delete savable;
+    return true;
 }

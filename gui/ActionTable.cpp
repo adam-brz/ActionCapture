@@ -1,6 +1,11 @@
 #include "ActionTable.h"
+#include "toolbox/SavableData.h"
+
 #include <QMenu>
 #include <QHeaderView>
+
+#include "input/KeyboardAction.h"
+#include "input/DeviceFactory.h"
 
 ActionTable::ActionTable(QWidget *parent) :
     QTableWidget(parent)
@@ -21,11 +26,39 @@ ActionTable::ActionTable(QWidget *parent) :
     connect(&actionInvoker, &QTimer::timeout, this, &ActionTable::invokeActions);
 }
 
+ActionTable::~ActionTable()
+{
+    clearActions();
+}
+
+void ActionTable::clearActions()
+{
+    for(auto &action: actions)
+        delete action;
+
+    actions.clear();
+
+    QAbstractItemModel *model = this->model();
+    model->removeRows(0, model->rowCount());
+}
+
+void ActionTable::removeAction(int index)
+{
+    if(index >= 0 && index < this->size())
+    {
+        delete actions[index];
+
+        removeRow(index);
+        actions.removeAt(index);
+    }
+}
+
 void ActionTable::addAction(Action *action, int index)
 {
-    actions.append(action);
     index = (index < 0) ? rowCount() : index;
+
     insertRow(index);
+    actions.insert(index, action);
 
     QTableWidgetItem *name = new QTableWidgetItem(QString::fromStdString(action->name()));
     setItem(index, 0, name);
@@ -70,9 +103,50 @@ int ActionTable::size()
     return actions.size();
 }
 
+unsigned char ActionTable::typeID() const
+{
+   return 0;
+}
+
+SavableData *ActionTable::save() const
+{
+    SavableData *data = Savable::save();
+
+    for(const auto& action : actions) {
+        data->add(*action->save());
+    }
+
+    return data;
+}
+
+bool ActionTable::restore(SavableData *data)
+{
+    if(!Savable::restore(data))
+        return false;
+
+    Action *tmp;
+    clearActions();
+
+    while(!data->atEnd()) {
+        switch((data->getRaw()[data->pos()])) {
+            case 1:
+                tmp = new KeyboardAction(DeviceFactory::makeKeyboard());
+                break;
+            default:
+                return false;
+        }
+
+        tmp->restore(data);
+        addAction(tmp);
+    }
+
+    return true;
+}
+
 void ActionTable::mousePressEvent(QMouseEvent *event)
 {
-    // TODO: move to new QTabWidget sub-class
+    clicked = event->pos();
+
     if(event->buttons() & Qt::RightButton)
     {
 
@@ -85,12 +159,11 @@ void ActionTable::mousePressEvent(QMouseEvent *event)
                                [=](){});
 
         contextMenu->addSeparator();
-
         contextMenu->addAction("Delete",
-                               [=](){});
+                               [=](){removeAction(rowAt(clicked.y()));
+        });
 
         contextMenu->popup(event->globalPos());
-
     }
 
     QTableWidget::mousePressEvent(event);
