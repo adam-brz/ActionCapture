@@ -24,15 +24,16 @@ EditorWindow::EditorWindow(QWidget *parent)
     connect(ui->gotoNextButton, &QPushButton::clicked, this, &EditorWindow::btnNextPressed);
     connect(ui->gotoEndButton, &QPushButton::clicked, this, &EditorWindow::btnLastPressed);
 
+    connect(ui->action_New, &QAction::triggered, this, &EditorWindow::newFile);
     connect(ui->action_Open, &QAction::triggered, this, &EditorWindow::askOpenFile);
     connect(ui->action_Save, &QAction::triggered, this, &EditorWindow::askSaveToFile);
-    connect(ui->actionExit, &QAction::triggered, this, &EditorWindow::close);
+    connect(ui->action_Save_as, &QAction::triggered, this, &EditorWindow::askSaveToFile);
 
-    connect(ui->actionExit, &QAction::triggered, this, &EditorWindow::close);
     connect(ui->action_About, &QAction::triggered, this, &EditorWindow::showAbout);
+    connect(ui->actionExit, &QAction::triggered, this, &EditorWindow::close);
 
-    connect(ui->actionTable, &ActionTable::runUpdated, this, &EditorWindow::updatePlayStatus);
     timer.start();
+    connect(ui->actionTable, &ActionTable::runUpdated, this, &EditorWindow::updatePlayStatus);
 
     mouse = DeviceFactory::makeMouse();
     mouse->setCallback([&](const MouseEvent &event) {
@@ -45,13 +46,13 @@ EditorWindow::EditorWindow(QWidget *parent)
         if(isRecording)
             kbEvent(event);
     });
+
+    ui->actionTable->setMouse(mouse);
+    ui->actionTable->setKeyboard(keyboard);
 }
 
 EditorWindow::~EditorWindow()
-{
-    for(const auto & action : actions)
-        delete action;
-
+{    
     DeviceFactory::removeInstances();
     delete ui;
 }
@@ -98,6 +99,18 @@ void EditorWindow::btnRecordPressed(bool shouldRecord)
 
     isRecording = shouldRecord;
     timer.restart();
+}
+
+void EditorWindow::newFile()
+{
+    ui->actionTable->stopRunning();
+    ui->playButton->setChecked(false);
+    ui->recordButton->setChecked(false);
+
+    btnPlayPressed(false);
+    btnRecordPressed(false);
+
+    ui->actionTable->clearActions();
 }
 
 void EditorWindow::btnNextPressed()

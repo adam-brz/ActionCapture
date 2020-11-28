@@ -42,15 +42,14 @@ void ActionTable::clearActions()
     model->removeRows(0, model->rowCount());
 }
 
-void ActionTable::removeAction(int index)
+void ActionTable::setMouse(GlobalMouse *value)
 {
-    if(index >= 0 && index < this->size())
-    {
-        delete actions[index];
+    mouse = value;
+}
 
-        removeRow(index);
-        actions.removeAt(index);
-    }
+void ActionTable::setKeyboard(GlobalKeyboard *value)
+{
+    keyboard = value;
 }
 
 void ActionTable::addAction(Action *action, int index)
@@ -65,6 +64,17 @@ void ActionTable::addAction(Action *action, int index)
 
     QTableWidgetItem *time = new QTableWidgetItem(QString("%1").arg(action->getStartTime()));
     setItem(index, 1, time);
+}
+
+void ActionTable::removeAction(int index)
+{
+    if(index >= 0 && index < this->size())
+    {
+        delete actions[index];
+
+        removeRow(index);
+        actions.removeAt(index);
+    }
 }
 
 void ActionTable::runActions()
@@ -124,20 +134,20 @@ bool ActionTable::restore(SavableData *data)
     if(!Savable::restore(data))
         return false;
 
-    Action *tmp;
+    Action *action;
     clearActions();
 
     while(!data->atEnd()) {
         switch((data->getRaw()[data->pos()])) {
             case 1:
-                tmp = new KeyboardAction(DeviceFactory::makeKeyboard());
+                action = new KeyboardAction(keyboard);
                 break;
             default:
                 return false;
         }
 
-        tmp->restore(data);
-        addAction(tmp);
+        action->restore(data);
+        addAction(action);
     }
 
     return true;

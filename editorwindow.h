@@ -7,8 +7,8 @@
 
 #include <QList>
 
-#include <input/GlobalMouse.h>
-#include <input/GlobalKeyboard.h>
+#include "input/GlobalMouse.h"
+#include "input/GlobalKeyboard.h"
 
 #include "input/Action.h"
 #include "input/KeyboardEvent.h"
@@ -28,8 +28,6 @@ private:
 
     GlobalMouse *mouse;
     GlobalKeyboard *keyboard;
-
-    QList<Action*> actions;
     bool isRecording = false;
 
 public:
@@ -49,6 +47,7 @@ private slots:
     void btnPlayPressed(bool shouldPlay);
     void btnRecordPressed(bool shouldRecord);
 
+    void newFile();
     void askSaveToFile();
     void askOpenFile();
 
