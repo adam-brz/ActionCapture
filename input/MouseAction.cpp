@@ -45,7 +45,7 @@ void MouseAction::run()
 
 unsigned char MouseAction::typeID() const
 {
-    return 2;
+    return MOUSE_ACTION_ID;
 }
 
 SavableData *MouseAction::save() const

@@ -5,6 +5,8 @@
 #include "GlobalMouse.h"
 #include "MouseEvent.h"
 
+constexpr int MOUSE_ACTION_ID = 2;
+
 class MouseAction : public Action
 {
     GlobalMouse *mouse;

@@ -3,12 +3,12 @@
 
 #include <QMessageBox>
 #include <QFileDialog>
-#include <QtDebug>
+
+#include "toolbox/SavableData.h"
 
 #include "input/DeviceFactory.h"
 #include "input/KeyboardAction.h"
-#include "input/KeyboardEvent.h"
-#include "toolbox/SavableData.h"
+#include "input/MouseAction.h"
 
 EditorWindow::EditorWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -215,7 +215,7 @@ void EditorWindow::kbEvent(const KeyboardEvent &event)
     if(!isRecording)
         return;
 
-    KeyboardAction *action = new KeyboardAction(keyboard, event);
+    Action *action = new KeyboardAction(keyboard, event);
     action->setStartTime(timer.elapsed());
     addAction(action, ui->actionTable->current());
     timer.restart();
@@ -225,4 +225,9 @@ void EditorWindow::mouseEvent(const MouseEvent &event)
 {
     if(!isRecording)
         return;
+
+    Action *action = new MouseAction(mouse, event);
+    action->setStartTime(timer.elapsed());
+    addAction(action, ui->actionTable->current());
+    timer.restart();
 }

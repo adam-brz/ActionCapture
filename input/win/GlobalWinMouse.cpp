@@ -75,9 +75,10 @@ void GlobalWinMouse::sendInput(const MouseEvent &event)
 {
     ZeroMemory(&input, sizeof(INPUT));
     input.type = INPUT_MOUSE;
+    input.mi.dwFlags |= MOUSEEVENTF_ABSOLUTE;
 
-    input.mi.dx = event.point.x;
-    input.mi.dy = event.point.y;
+    input.mi.dx = ( 65535 * (event.point.x + 1) ) / GetSystemMetrics(SM_CXSCREEN);
+    input.mi.dy = ( 65535 * (event.point.y + 1) ) / GetSystemMetrics(SM_CYSCREEN);
 
     if(event.type == MouseEventType::MOVE) {
          input.mi.dwFlags |= MOUSEEVENTF_MOVE;

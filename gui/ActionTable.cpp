@@ -5,7 +5,7 @@
 #include <QHeaderView>
 
 #include "input/KeyboardAction.h"
-#include "input/DeviceFactory.h"
+#include "input/MouseAction.h"
 
 ActionTable::ActionTable(QWidget *parent) :
     QTableWidget(parent)
@@ -139,8 +139,11 @@ bool ActionTable::restore(SavableData *data)
 
     while(!data->atEnd()) {
         switch((data->getRaw()[data->pos()])) {
-            case 1:
+            case KEYBOAD_ACTION_ID:
                 action = new KeyboardAction(keyboard);
+                break;
+            case MOUSE_ACTION_ID:
+                action = new MouseAction(mouse);
                 break;
             default:
                 return false;

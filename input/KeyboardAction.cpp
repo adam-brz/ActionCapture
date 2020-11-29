@@ -31,7 +31,7 @@ void KeyboardAction::run()
 
 unsigned char KeyboardAction::typeID() const
 {
-    return 1;
+    return KEYBOAD_ACTION_ID;
 }
 
 SavableData *KeyboardAction::save() const

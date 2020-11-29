@@ -5,6 +5,8 @@
 #include "GlobalKeyboard.h"
 #include "KeyboardEvent.h"
 
+constexpr int KEYBOAD_ACTION_ID = 1;
+
 class KeyboardAction : public Action
 {
     GlobalKeyboard *keyboard;
