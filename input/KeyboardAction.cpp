@@ -38,7 +38,6 @@ SavableData *KeyboardAction::save() const
 {
     SavableData *data = Action::save();
     data->add(RawBytesConst(&event), sizeof(event));
-
     return data;
 }
 

@@ -11,6 +11,7 @@
 #include "input/Action.h"
 #include "input/KeyboardEvent.h"
 #include "input/MouseEvent.h"
+#include "input/EventFilter.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class EditorWindow; }
@@ -23,6 +24,7 @@ class EditorWindow : public QMainWindow
 private:
     Ui::EditorWindow *ui;
     QElapsedTimer timer;
+    EventFilter filter;
 
     GlobalMouse *mouse;
     GlobalKeyboard *keyboard;

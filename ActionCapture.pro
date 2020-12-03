@@ -10,6 +10,7 @@ CONFIG += c++11
 
 SOURCES += \
     gui/ActionTable.cpp \
+    gui/EventFiltersWidget.cpp \
     input/Action.cpp \
     input/DeviceFactory.cpp \
     input/GlobalKeyboard.cpp \
@@ -26,8 +27,10 @@ SOURCES += \
 HEADERS += \
     editorwindow.h \
     gui/ActionTable.h \
+    gui/EventFiltersWidget.h \
     input/Action.h \
     input/DeviceFactory.h \
+    input/EventFilter.h \
     input/GlobalKeyboard.h \
     input/GlobalMouse.h \
     input/Key.h \
@@ -42,7 +45,8 @@ HEADERS += \
     toolbox/SavableData.h
 
 FORMS += \
-    editorwindow.ui
+    editorwindow.ui \
+    gui/EventFiltersWidget.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

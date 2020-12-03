@@ -9,7 +9,7 @@
 #include "input/DeviceFactory.h"
 #include "input/KeyboardAction.h"
 #include "input/MouseAction.h"
-
+#include <QtDebug>
 EditorWindow::EditorWindow(QWidget *parent)
     : QMainWindow(parent),
       ui(new Ui::EditorWindow)
@@ -31,6 +31,9 @@ EditorWindow::EditorWindow(QWidget *parent)
 
     connect(ui->action_About, &QAction::triggered, this, &EditorWindow::showAbout);
     connect(ui->actionExit, &QAction::triggered, this, &EditorWindow::close);
+
+    connect(ui->eventFilter, &EventFiltersWidget::filtersUpdated,
+            [=](const EventFilter &filter){this->filter = filter;});
 
     timer.start();
     connect(ui->actionTable, &ActionTable::runUpdated, this, &EditorWindow::updatePlayStatus);
@@ -212,7 +215,7 @@ void EditorWindow::stopRecording()
 
 void EditorWindow::kbEvent(const KeyboardEvent &event)
 {
-    if(!isRecording)
+    if(!isRecording || !filter.isGoodEvent(event))
         return;
 
     Action *action = new KeyboardAction(keyboard, event);
@@ -223,7 +226,7 @@ void EditorWindow::kbEvent(const KeyboardEvent &event)
 
 void EditorWindow::mouseEvent(const MouseEvent &event)
 {
-    if(!isRecording)
+    if(!isRecording || !filter.isGoodEvent(event))
         return;
 
     Action *action = new MouseAction(mouse, event);

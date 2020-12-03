@@ -172,8 +172,7 @@ void ActionTable::mousePressEvent(QMouseEvent *event)
                                [=](){});
 
         contextMenu->addSeparator();
-        contextMenu->addAction("Delete",
-                               [=](){removeAction(rowAt(clicked.y()));
+        contextMenu->addAction("Delete", [=](){removeAction(rowAt(clicked.y()));
         });
 
         contextMenu->popup(event->globalPos());

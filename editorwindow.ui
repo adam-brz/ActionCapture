@@ -92,6 +92,9 @@
     <item>
      <widget class="ActionTable" name="actionTable" native="true"/>
     </item>
+    <item>
+     <widget class="EventFiltersWidget" name="eventFilter" native="true"/>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -120,7 +123,6 @@
      <string>&amp;Edit</string>
     </property>
     <addaction name="action_Undo"/>
-    <addaction name="action_Redo"/>
    </widget>
    <widget class="QMenu" name="menu_Hel">
     <property name="title">
@@ -160,7 +162,7 @@
   </action>
   <action name="action_Undo">
    <property name="text">
-    <string>&amp;Undo</string>
+    <string>&amp;Options</string>
    </property>
   </action>
   <action name="action_Redo">
@@ -179,6 +181,12 @@
    <class>ActionTable</class>
    <extends>QWidget</extends>
    <header>gui/ActionTable.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>EventFiltersWidget</class>
+   <extends>QWidget</extends>
+   <header>gui/EventFiltersWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
