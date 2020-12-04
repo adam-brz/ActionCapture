@@ -23,6 +23,8 @@ class EditorWindow : public QMainWindow
 
 private:
     Ui::EditorWindow *ui;
+    QString openFileName;
+
     QElapsedTimer timer;
     EventFilter filter;
 
@@ -49,6 +51,7 @@ private slots:
 
     void newFile();
     void askSaveToFile();
+    void askSaveAs(QString name = "");
     void askOpenFile();
 
 private:

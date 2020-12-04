@@ -8,6 +8,7 @@ int main(int argc, char *argv[])
     EditorWindow w;
 
     a.setStyle(QStyleFactory::create("Fusion"));
+    w.setWindowTitle("ActionCapture");
     w.show();
 
     return a.exec();

@@ -14,6 +14,11 @@ MouseAction::MouseAction(GlobalMouse *mouse, const MouseEvent &event) :
 
 }
 
+const MouseEvent &MouseAction::readEvent() const
+{
+    return event;
+}
+
 std::string MouseAction::name() const
 {
     std::string description = "Mouse ";

@@ -7,6 +7,7 @@
 #include <QList>
 #include <QTimer>
 
+#include "ActionCreator.h"
 #include "input/GlobalMouse.h"
 #include "input/GlobalKeyboard.h"
 #include "input/Action.h"
@@ -19,12 +20,13 @@ class ActionTable : public QTableWidget, public Savable
 
 private:
     QList<Action*> actions;
+    ActionCreator *creator = nullptr;
+    int editedRow;
 
     GlobalMouse *mouse = nullptr;
     GlobalKeyboard *keyboard = nullptr;
 
     QTimer actionInvoker;
-    QPoint clicked;
 
 public:
     explicit ActionTable(QWidget *parent = nullptr);
@@ -50,9 +52,16 @@ public:
 
 protected:
     void mousePressEvent(QMouseEvent *event) override;
+    void mouseDoubleClickEvent(QMouseEvent *event) override;
 
 private slots:
     void invokeActions();
+    void removeSelected();
+
+private:
+    QList<int> getSelected();
+    void applyEditIfNeeded();
+    void editRow(int row);
 
 signals:
     void runUpdated(int);

@@ -16,6 +16,8 @@ public:
     KeyboardAction(GlobalKeyboard *keyboard = nullptr);
     KeyboardAction(GlobalKeyboard *keyboard, const KeyboardEvent &event);
 
+    const KeyboardEvent &readEvent() const;
+
     virtual std::string name() const override;
     virtual void run() override;
 

@@ -9,12 +9,13 @@
 #include "input/DeviceFactory.h"
 #include "input/KeyboardAction.h"
 #include "input/MouseAction.h"
-#include <QtDebug>
+
 EditorWindow::EditorWindow(QWidget *parent)
     : QMainWindow(parent),
       ui(new Ui::EditorWindow)
 {
     ui->setupUi(this);
+    resize(minimumSizeHint().width(), height());
 
     connect(ui->recordButton, &QPushButton::clicked, this, &EditorWindow::btnRecordPressed);
     connect(ui->playButton, &QPushButton::clicked, this, &EditorWindow::btnPlayPressed);
@@ -27,11 +28,12 @@ EditorWindow::EditorWindow(QWidget *parent)
     connect(ui->action_New, &QAction::triggered, this, &EditorWindow::newFile);
     connect(ui->action_Open, &QAction::triggered, this, &EditorWindow::askOpenFile);
     connect(ui->action_Save, &QAction::triggered, this, &EditorWindow::askSaveToFile);
-    connect(ui->action_Save_as, &QAction::triggered, this, &EditorWindow::askSaveToFile);
+    connect(ui->action_Save_as, &QAction::triggered, [=](){askSaveAs();});
 
     connect(ui->action_About, &QAction::triggered, this, &EditorWindow::showAbout);
     connect(ui->actionExit, &QAction::triggered, this, &EditorWindow::close);
 
+    filter = ui->eventFilter->getFilter();
     connect(ui->eventFilter, &EventFiltersWidget::filtersUpdated,
             [=](const EventFilter &filter){this->filter = filter;});
 
@@ -138,14 +140,23 @@ void EditorWindow::newFile()
     stopRecording();
 
     ui->actionTable->clearActions();
+    openFileName = "";
 }
 
 void EditorWindow::askSaveToFile()
 {
-    QString name = QFileDialog::getSaveFileName(this, tr("Open saved actions"),
-                                        ".", tr("Action Capture (*.actc)"));
+    askSaveAs(openFileName);
+}
+
+void EditorWindow::askSaveAs(QString name)
+{
+    if(name.isEmpty()) {
+        name = QFileDialog::getSaveFileName(this, tr("Open saved actions"),
+                                            ".", tr("Action Capture (*.actc)"));
+    }
 
     if(!name.isEmpty()) {
+        openFileName = name;
         saveToFile(name);
     }
 }
@@ -156,6 +167,7 @@ void EditorWindow::askOpenFile()
                                                 ".", tr("Action Capture (*.actc)"));
 
     if(!name.isEmpty()) {
+        openFileName = name;
         openFile(name);
     }
 }

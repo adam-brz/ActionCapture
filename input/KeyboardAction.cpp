@@ -14,6 +14,11 @@ KeyboardAction::KeyboardAction(GlobalKeyboard *keyboard, const KeyboardEvent &ev
 
 }
 
+const KeyboardEvent &KeyboardAction::readEvent() const
+{
+    return event;
+}
+
 std::string KeyboardAction::name() const
 {
     std::string description = "Key ";

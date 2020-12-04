@@ -16,6 +16,8 @@ public:
     MouseAction(GlobalMouse *mouse = nullptr);
     MouseAction(GlobalMouse *mouse, const MouseEvent &event);
 
+    const MouseEvent &readEvent() const;
+
     virtual std::string name() const override;
     virtual void run() override;
 

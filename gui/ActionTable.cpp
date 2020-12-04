@@ -4,6 +4,8 @@
 #include <QMenu>
 #include <QHeaderView>
 
+#include <algorithm>
+
 #include "input/KeyboardAction.h"
 #include "input/MouseAction.h"
 
@@ -13,7 +15,7 @@ ActionTable::ActionTable(QWidget *parent) :
     setColumnCount(2);
     setEditTriggers(EditTriggers());
 
-    setSelectionMode(QAbstractItemView::SingleSelection);
+    setSelectionMode(QAbstractItemView::ExtendedSelection);
     setSelectionBehavior(QAbstractItemView::SelectRows);
 
     QHeaderView *header = horizontalHeader();
@@ -158,27 +160,30 @@ bool ActionTable::restore(SavableData *data)
 
 void ActionTable::mousePressEvent(QMouseEvent *event)
 {
-    clicked = event->pos();
+    applyEditIfNeeded();
 
     if(event->buttons() & Qt::RightButton)
     {
-
         QMenu *contextMenu = new QMenu(this);
 
-        contextMenu->addAction("Insert Above",
-                               [=](){});
-
-        contextMenu->addAction("Insert Below",
-                               [=](){});
-
         contextMenu->addSeparator();
-        contextMenu->addAction("Delete", [=](){removeAction(rowAt(clicked.y()));
-        });
+        contextMenu->addAction("Delete", this, &ActionTable::removeSelected);
 
         contextMenu->popup(event->globalPos());
     }
 
     QTableWidget::mousePressEvent(event);
+}
+
+void ActionTable::mouseDoubleClickEvent(QMouseEvent *event)
+{
+    if(event->buttons() & Qt::LeftButton)
+    {
+        int row = rowAt(event->pos().y());
+        editRow(row);
+    }
+
+    QTableWidget::mouseDoubleClickEvent(event);
 }
 
 void ActionTable::invokeActions()
@@ -193,4 +198,58 @@ void ActionTable::invokeActions()
         select(currentIndex + 1);
         actionInvoker.start(actions[currentIndex + 1]->getStartTime());
     }
+}
+
+void ActionTable::removeSelected()
+{
+    QList<int> selected = getSelected();
+
+    for(const auto &idx: selected)
+        removeAction(idx);
+}
+
+QList<int> ActionTable::getSelected()
+{
+    QList<int> rows;
+
+    for(const auto& idx : selectionModel()->selectedRows())
+        rows.append(idx.row());
+
+    std::sort(rows.rbegin(), rows.rend());
+    return rows;
+}
+
+void ActionTable::applyEditIfNeeded()
+{
+    if(creator)
+    {
+        Action *newAction = creator->makeAction();
+
+        creator->deleteLater();
+        creator = nullptr;
+
+        removeAction(editedRow);
+        addAction(newAction, editedRow);
+    }
+}
+
+void ActionTable::editRow(int row)
+{
+    if(itemAt(row, 0) && itemAt(row, 1)) {
+        item(row, 0)->setText("");
+        item(row, 1)->setText("");
+    }
+
+    creator = new ActionCreator(this);
+
+    if(row < actions.size())
+        creator->fillWithAction(actions[row]);
+
+    creator->setKeyboard(keyboard);
+    creator->setMouse(mouse);
+
+    setCellWidget(row, 0, creator);
+    setRowHeight(row, creator->sizeHint().height());
+
+    editedRow = row;
 }

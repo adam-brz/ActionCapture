@@ -9,6 +9,7 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    gui/ActionCreator.cpp \
     gui/ActionTable.cpp \
     gui/EventFiltersWidget.cpp \
     input/Action.cpp \
@@ -16,7 +17,9 @@ SOURCES += \
     input/GlobalKeyboard.cpp \
     input/GlobalMouse.cpp \
     input/KeyboardAction.cpp \
+    input/KeyboardEvent.cpp \
     input/MouseAction.cpp \
+    input/MouseEvent.cpp \
     input/win/GlobalWinKeyboard.cpp \
     input/win/GlobalWinMouse.cpp \
     main.cpp \
@@ -26,6 +29,7 @@ SOURCES += \
 
 HEADERS += \
     editorwindow.h \
+    gui/ActionCreator.h \
     gui/ActionTable.h \
     gui/EventFiltersWidget.h \
     input/Action.h \
@@ -46,6 +50,7 @@ HEADERS += \
 
 FORMS += \
     editorwindow.ui \
+    gui/ActionCreator.ui \
     gui/EventFiltersWidget.ui
 
 # Default rules for deployment.
